@@ -6,7 +6,7 @@ import './all.css'
 import useSiteMetadata from './SiteMetadata'
 import { withPrefix } from 'gatsby'
 
-const TemplateWrapper = ({ children }) => {
+const TemplateWrapper = ({ children, className }) => {
   const { title, description } = useSiteMetadata()
   return (
     <div>
@@ -49,7 +49,7 @@ const TemplateWrapper = ({ children }) => {
         />
       </Helmet>
       <Navbar />
-      <div>{children}</div>
+      <div className={className}>{children}</div>
       <Footer />
     </div>
   )

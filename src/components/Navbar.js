@@ -9,7 +9,9 @@ export default () => {
       aria-label="main-navigation"
     >
       <div className="flex flex-1 items-center p-2">
-        MOD
+        <Link to="/">
+          MOD
+        </Link>
       </div>
       <div className="flex flex-auto items-end justify-end p-2">
         <Link to="/about">

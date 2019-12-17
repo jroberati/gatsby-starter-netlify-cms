@@ -1,61 +1,76 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link, graphql, StaticQuery } from 'gatsby'
+import { Link, graphql, useStaticQuery } from 'gatsby'
 import PreviewCompatibleImage from './PreviewCompatibleImage'
 
-class BlogRoll extends React.Component {
-  render() {
-    const { data } = this.props
-    const { edges: posts } = data.allMarkdownRemark
-
-    return (
-      <div className="columns is-multiline">
-        {posts &&
-          posts.map(({ node: post }) => (
-            <div className="is-parent column is-6" key={post.id}>
-              <article
-                className={`blog-list-item tile is-child box notification ${
-                  post.frontmatter.featuredpost ? 'is-featured' : ''
-                }`}
-              >
-                <header>
-                  {post.frontmatter.featuredimage ? (
-                    <div className="featured-thumbnail">
-                      <PreviewCompatibleImage
-                        imageInfo={{
-                          image: post.frontmatter.featuredimage,
-                          alt: `featured image thumbnail for post ${post.frontmatter.title}`,
-                        }}
-                      />
-                    </div>
-                  ) : null}
-                  <p className="post-meta">
-                    <Link
-                      className="title has-text-primary is-size-4"
-                      to={post.fields.slug}
-                    >
-                      {post.frontmatter.title}
-                    </Link>
-                    <span> &bull; </span>
-                    <span className="subtitle is-size-5 is-block">
-                      {post.frontmatter.date}
-                    </span>
-                  </p>
-                </header>
-                <p>
-                  {post.excerpt}
-                  <br />
-                  <br />
-                  <Link className="button" to={post.fields.slug}>
-                    Keep Reading →
-                  </Link>
-                </p>
-              </article>
-            </div>
-          ))}
-      </div>
-    )
+const query = graphql`
+  query BlogRollQuery {
+    allMarkdownRemark(
+      sort: { order: DESC, fields: [frontmatter___date] }
+      filter: { frontmatter: { templateKey: { eq: "blog-post" } } }
+    ) {
+      edges {
+        node {
+          excerpt(pruneLength: 400)
+          id
+          fields {
+            slug
+          }
+          frontmatter {
+            title
+            templateKey
+            date(formatString: "MMMM DD, YYYY")
+            featuredpost
+            featuredimage {
+              childImageSharp {
+                fluid(maxWidth: 120, quality: 100) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
+`
+
+const BlogRoll = props => {
+  const { allMarkdownRemark } = useStaticQuery(query)
+  const { edges: posts } = allMarkdownRemark
+  
+  return (
+    <div>
+      {posts && posts.map(({ node: post }) => (
+        <div key={post.id} className='flex flex-col sm:flex-row'>
+          {!!post.frontmatter.featuredimage &&
+            <PreviewCompatibleImage 
+              className='m-6 w-3/4 flex-shrink-0 self-center sm:self-start sm:w-1/3'
+              imageInfo={{
+                image: post.frontmatter.featuredimage,
+                alt: `featured image thumbnail for post ${post.frontmatter.title}`,
+              }}
+            />}
+          <article className={`flex flex-col p-3 ${post.frontmatter.featuredpost ? 'border rounded' : ''}`}>
+            <header className='flex flex-col'>
+              <Link className='block font-bold my-3' to={post.fields.slug}>
+                {post.frontmatter.title}
+              </Link>
+              <div className='italic mb-3' >{post.frontmatter.date}</div>
+            </header>
+            <div>
+              <div className=''>
+                <p>{post.excerpt}</p>
+                <Link to={post.fields.slug}>
+                  Keep Reading →
+                </Link>
+              </div>
+            </div>
+          </article>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 BlogRoll.propTypes = {
@@ -66,39 +81,4 @@ BlogRoll.propTypes = {
   }),
 }
 
-export default () => (
-  <StaticQuery
-    query={graphql`
-      query BlogRollQuery {
-        allMarkdownRemark(
-          sort: { order: DESC, fields: [frontmatter___date] }
-          filter: { frontmatter: { templateKey: { eq: "blog-post" } } }
-        ) {
-          edges {
-            node {
-              excerpt(pruneLength: 400)
-              id
-              fields {
-                slug
-              }
-              frontmatter {
-                title
-                templateKey
-                date(formatString: "MMMM DD, YYYY")
-                featuredpost
-                featuredimage {
-                  childImageSharp {
-                    fluid(maxWidth: 120, quality: 100) {
-                      ...GatsbyImageSharpFluid
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    `}
-    render={(data, count) => <BlogRoll data={data} count={count} />}
-  />
-)
+export default BlogRoll
