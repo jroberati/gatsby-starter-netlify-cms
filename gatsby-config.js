@@ -69,6 +69,7 @@ module.exports = {
         ],
       },
     },
+    // style-plugins
     {
       resolve: 'gatsby-plugin-netlify-cms',
       options: {
