@@ -7,6 +7,7 @@
     "bulma": "^0.8.0",
     "gatsby": "^2.13.31",
     "gatsby-image": "^2.0.23",
+    "gatsby-plugin-alias-imports": "^1.0.5",
     "gatsby-plugin-netlify": "^2.0.6",
     "gatsby-plugin-netlify-cms": "^4.1.6",
     "gatsby-plugin-purgecss": "^4.0.0",
@@ -26,8 +27,8 @@
     "netlify-cms-media-library-uploadcare": "^0.5.2",
     "node-sass": "^4.11.0",
     "prop-types": "^15.6.0",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "react-helmet": "^5.2.0",
     "uuid": "^3.2.1"
   },
@@ -41,6 +42,7 @@
     "start": "npm run develop",
     "build": "npm run clean && gatsby build",
     "develop": "npm run clean && gatsby develop",
+    "setup:style": "setup.js -style",
     "format": "prettier --trailing-comma es5 --no-semi --single-quote --write \"{gatsby-*.js,src/**/*.js}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

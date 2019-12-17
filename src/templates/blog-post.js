@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { kebabCase } from 'lodash'
 import Helmet from 'react-helmet'
-import { graphql, Link } from 'gatsby'
-import Layout from '../components/Layout'
-import Content, { HTMLContent } from '../components/Content'
+import { graphql } from 'gatsby'
+import Layout from 'components/layout'
+import Content, { HTMLContent } from 'components/content'
 
 export const BlogPostTemplate = ({
   content,
@@ -17,26 +16,12 @@ export const BlogPostTemplate = ({
   const PostContent = contentComponent || Content
 
   return (
-    <section className='flex justify-center'>
+    <section>
       {helmet || ''}
-      <div className='flex-col mx-3 sm:w-2/3 lg:w-1/2'>
-        <h1>
-          {title}
-        </h1>
+      <div>
+        <h1>{title}</h1>
         <p>{description}</p>
         <PostContent content={content} />
-        {tags && tags.length ? (
-          <div className='mt-4'>
-            <h4>Tags</h4>
-            <ul>
-              {tags.map(tag => (
-                <li key={tag + `tag`}>
-                  <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
       </div>
     </section>
   )
